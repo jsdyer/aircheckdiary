@@ -2,7 +2,7 @@
   "id": "aircheckdiary",
   "title": "Aircheck Diary",
   "description": "Compare what Halifax and Vancouver logged at the same local hour, find a favourite title and open its original broadcast records.",
-  "category": "explorers",
+  "category": "media",
   "tags": ["television", "Canada", "CRTC", "Halifax", "Vancouver", "CBC", "CTV"],
   "icon": "tv-minimal",
   "url": "/aircheckdiary/",
