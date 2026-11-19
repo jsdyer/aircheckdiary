@@ -1,53 +1,53 @@
-"""Exercise the built starter at a project subpath in Chromium."""
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import os
 from pathlib import Path
-import shutil
 import tempfile
 import threading
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-class QuietHandler(SimpleHTTPRequestHandler):
+class Quiet(SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
-
 def main():
-    screenshots = ROOT / "browser-checks"
-    screenshots.mkdir(exist_ok=True)
-    with tempfile.TemporaryDirectory() as temporary:
-        shutil.copytree(ROOT / "dist", Path(temporary) / "example-tool")
-        server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=temporary))
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / 'aircheckdiary').symlink_to(ROOT / 'dist', target_is_directory=True)
+        server = ThreadingHTTPServer(('127.0.0.1',0), partial(Quiet, directory=tmp))
         threading.Thread(target=server.serve_forever, daemon=True).start()
         try:
-            with sync_playwright() as p:
-                browser = p.chromium.launch()
-                page = browser.new_page(viewport={"width": 1280, "height": 1000})
-                errors = []
-                page.on("pageerror", lambda error: errors.append(str(error)))
-                page.goto(f"http://127.0.0.1:{server.server_port}/example-tool/")
-                page.locator("#sample").click()
-                assert page.locator("#output").input_value() == "Halifax\nLangley\nVancouver"
-                assert "1 duplicate removed" in page.locator("#status").inner_text()
-                page.locator("#input").fill('<img src=x onerror="alert(1)">\n<img src=x onerror="alert(1)">')
-                assert page.locator("#output").input_value() == '<img src=x onerror="alert(1)">'
-                assert page.locator("img").count() == 0
-                page.locator("#clear").click()
-                assert page.locator("#output").input_value() == ""
-                page.locator("#sample").click()
-                page.screenshot(path=str(screenshots / "desktop.png"), full_page=True)
-                page.set_viewport_size({"width": 390, "height": 844})
-                assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-                page.screenshot(path=str(screenshots / "mobile.png"), full_page=True)
+            with sync_playwright() as pw:
+                browser = pw.chromium.launch(executable_path=os.getenv('AIR_CHROMIUM'))
+                page = browser.new_page(viewport={'width':1280,'height':900})
+                errors=[]
+                page.on('pageerror',lambda exc: errors.append(str(exc)))
+                page.goto(f'http://127.0.0.1:{server.server_port}/aircheckdiary/')
+                titles = page.locator('.slot h3')
+                expect(titles).to_have_text(['Password','Jeopardy! Masters'])
+                page.locator('.detail summary').first.click()
+                expect(page.locator('.rawrow').first).to_contain_text('#731')
+                page.locator('#time').select_option('79200')
+                expect(titles).to_have_text(['Jeopardy! Masters','Password'])
+                page.locator('#a').select_option('CBHT')
+                page.locator('#b').select_option('CBUT')
+                page.locator('#time').select_option('72000')
+                expect(titles).to_have_text(['Still Standing','Still Standing'])
+                page.locator('#query').fill('Password')
+                expect(page.locator('.hit').first).to_contain_text('Password')
+                page.locator('.hit').first.click()
+                expect(titles.first).to_have_text('Password')
+                link=page.url
+                page.goto(link)
+                expect(titles.first).to_have_text('Password')
+                (ROOT / 'browser-checks').mkdir(exist_ok=True)
+                page.screenshot(path=ROOT/'browser-checks/desktop.png')
+                page.set_viewport_size({'width':390,'height':844})
+                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+                page.screenshot(path=ROOT/'browser-checks/mobile.png')
                 assert not errors, errors
                 browser.close()
-            print("Browser checks passed: project subpath, sample, clear, safe text and mobile layout")
         finally:
             server.shutdown()
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

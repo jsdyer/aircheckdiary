@@ -1,0 +1,14 @@
+{
+  "month": "2026-09",
+  "url": "https://applications.crtc.gc.ca/OpenData/Television%20Logs/STAR2/2026/2026-09.zip",
+  "retrieved": "2026-11-19",
+  "archiveBytes": 74225335,
+  "sha256": "659fb64f1dd9e226960f4ee629ff75d2ba3769ce6048e0a19c4dfc7991ec6ecd",
+  "files": {
+    "CJCH": "2026-09\\CJCH_202609_094443132.log",
+    "CIVT": "2026-09\\CIVT_202609_094325365.log",
+    "CBHT": "2026-09\\CBHT_202609_151225453.log",
+    "CBUT": "2026-09\\CBUT_202609_151420315.log"
+  },
+  "archiveLogs": 221
+}

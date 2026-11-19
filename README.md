@@ -1,115 +1,40 @@
-# CoolCode browser tool template
+# Aircheck Diary
 
-A starting point for independent tools at `coolcode.ca/<repo>/`: a working local-text
-example, responsive UI, Python standard-library build, Node tests, PR checks and Pages
-publication. No npm install is needed.
-
-## Using the example
+Compare Canadian television schedules on the local station clock, search a full month of titles and inspect the source rows for an airing. [Open Aircheck Diary](https://coolcode.ca/aircheckdiary/)
 
 <!-- coolcode:guide -->
-The first occurrence of each trimmed line keeps its place. Compare the output with the original text before copying the result.
+Compare September 1, 2026 at 8 p.m. Halifax’s CJCH logged Password while Vancouver’s CIVT logged Jeopardy! Masters. At 10 p.m. the titles trade places. Open a program’s source rows to see the commercial spots and segments filed inside its slot.
 <!-- /coolcode:guide -->
 
-For a real tool, replace this paragraph with one or two plain-text sentences
-about an example, a limit or how to interpret the results. Keep the source,
-coverage, refresh behaviour and a worked example in this README as appropriate.
-When updating a tool, revise any details its behaviour has changed and keep the
-homepage's shorter data-source sentence in `tool.json` accurate.
-The hub imports the marked note into the catalogue README.
+## Try a comparison
 
-## One-time template setup
+| Local clock on September 1 | Halifax | Vancouver |
+| --- | --- | --- |
+| [8 p.m. on CTV](https://coolcode.ca/aircheckdiary/?a=CJCH&b=CIVT&date=2026-09-01&t=72000) | Password | Jeopardy! Masters |
+| [10 p.m. on CTV](https://coolcode.ca/aircheckdiary/?a=CJCH&b=CIVT&date=2026-09-01&t=79200) | Jeopardy! Masters | Password |
+| [6 a.m. on CBC](https://coolcode.ca/aircheckdiary/?a=CBHT&b=CBUT&date=2026-09-01&t=21600) | Information Morning Nova Scotia | The Early Edition (Vancouver) |
+| [8 p.m. on CBC](https://coolcode.ca/aircheckdiary/?a=CBHT&b=CBUT&date=2026-09-01&t=72000) | Still Standing | Still Standing |
 
-Enable **Settings → General → Template repository** here. This repository does not
-need Pages enabled: its workflow builds/tests but intentionally skips deployment.
-New copies also skip deployment until `scripts/init.py` sets the tool ID to match
-their repository name. This lets you create the repo before configuring Pages.
+The before and after buttons select the neighbouring program and update both cards. The title search covers all four stations for the selected month, including distinct segment titles. Select an airing to open the parent program. Open the full schedules to jump to any logged start or copy the comparison link to share the stations, date and time. Search terms stay in the browser. The site fetches public day files and the title index from its own host.
 
-## Start a new tool
+## What the edition covers
 
-1. Select **Use this template → Create a new repository**, choose owner `jsdyer`,
-   a unique lowercase name such as `my-tool`, and public visibility.
-2. Clone the new repository. Use Python 3.12+ and Node 24+.
-3. Set the identity, using a slug that matches the repository name:
+The September 2026 CRTC archive contained 221 log files and 74,225,335 bytes. The four selected stations filed 128,048 nonblank records across 120 station-days. They include 5,749 program starts. The original reporting dates run from September 1 through September 30. The archive was retrieved November 19, 2026.
 
-```sh
-python3 scripts/init.py my-tool --title "My Tool" --description "Describe what this tool does."
-```
+These are licensees’ filed accounts of broadcasts. Titles, misspellings, clocks, durations, record codes and the other fixed-width fields appear as submitted. Opening a source entry gives its original text, physical line number and station filename. The checked-in compressed extracts retain the original station files byte for byte. The inventory also records the ZIP digest.
 
-Review the category, tags and icon in `tool.json`. `access: "browser"` tells the main
-catalogue that the tool works immediately without installation. `--owner` supports a different
-GitHub owner, but only projects owned by `jsdyer` inherit the CoolCode domain.
+[Original September ZIP](https://applications.crtc.gc.ca/OpenData/Television%20Logs/STAR2/2026/2026-09.zip) · [Federal data catalogue](https://open.canada.ca/data/en/dataset/800106c1-0b08-401e-8be2-ac45d62e662e) · [CRTC logging guide](https://crtc.gc.ca/eng/5000/tv14.htm) · [Program categories](https://crtc.gc.ca/canrec/eng/tvcat.htm) · [Site inventory](https://coolcode.ca/aircheckdiary/data/archive.json)
 
-4. Replace the example in `web/` and its tests. Update the privacy explanation,
-   source attribution and README to describe the real tool.
-5. Test and preview:
+## Reading the time and record codes
 
-```sh
-node --test tests/*.test.mjs
-python3 -m unittest discover -s tests -v
-python3 scripts/build.py
-python3 -m http.server 8000 --directory dist
-```
+Both cards use the selected local clock and reporting date. Halifax uses Atlantic time and Vancouver uses Pacific time. In September, 8 p.m. local in the two cities occurs four hours apart. The reporting clock rolls over at 5 a.m. for the two CTV logs and 6 a.m. for the two CBC logs. After midnight, the original reporting date stays on each row. “Next day” means the following civil date. A comparison outside a selected station’s reporting interval displays a gap.
 
-Open `http://localhost:8000/`. The example trims lines, skips blanks and removes exact
-duplicates, preserving first-seen order and capitalization. It makes no API requests
-and does not persist text. Update that explanation if your app behaves differently.
+PGR (program), PFS (first segment) and PGI (paid program) start a slot. Consecutive SEG continuation records extend a PFS to its last filed segment end. Each spot is attached to the slot containing its local start. The start and end boundaries define the slot. Adding commercial durations would count the same airtime twice. The interface retains COM, NRN, PRC, PRO and any other filed types. Rows outside a slot remain accessible in the full schedule. Some stations leave the filed end clock blank for spots. The original blank and the filed duration remain visible.
 
-CI also tests the browser flow and mobile layout at a project subpath. Replace the
-sample assertions in `tests/browser_smoke.py` when implementing your own UI. To run
-that check locally (optional for ordinary preview):
+## Build and refresh
 
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r tests/browser-requirements.txt
-python3 -m playwright install --with-deps chromium
-python3 tests/browser_smoke.py
-```
+Run `python3 scripts/build.py` to build the site from checked-in snapshots without network access. Serve `dist/` with `python3 -m http.server --directory dist`. The build writes one gzip JSON file for each station and reporting date plus one searchable title index per month. Modern browsers open the compressed records on demand.
 
-Playwright is a test-only dependency; the app and its static build do not use it.
+Run `python3 -m unittest discover -s tests -v` and `node --test tests/*.test.mjs` for the importer and comparison checks. CI also exercises the published layout at a project subpath with Playwright.
 
-## Publish and register
-
-When the actual tool is ready, in the **new tool repository** set **Settings → Pages → Build and deployment →
-Source → GitHub Actions**. Push to `main`, or manually run **Browser tool · Check and
-publish** after enabling Pages. If the initial deployment ran before Pages was enabled,
-enable it and rerun. PRs only check/build and provide a downloadable preview artifact.
-
-Keep asset paths and module imports relative. Check `https://coolcode.ca/my-tool/`.
-Do not add a CNAME or set `coolcode.ca` as this project's custom domain; the account
-site supplies it. Only successful `main` builds deploy.
-
-After verifying the app, copy the reviewed object from `tool.json` into `data/tools.json`
-in [the main site](https://github.com/jsdyer/jsdyer.github.io). Each tool still builds
-independently. Update the hub record when listing metadata changes; the hub is the
-authority for discovery. Ordinary app updates touch only this repository.
-
-The main site separates **Use in your browser** from **Install yourself**. An app
-that asks for a file is still a browser tool. Standalone Linux packages should start
-in their own repositories with their own build/release workflow, rather than copying
-this browser-only scaffold. Their hub record uses `access: "install"`, links to an
-installation guide, and includes `requirements`.
-
-## Files
-
-| Path | Purpose |
-| --- | --- |
-| `tool.json` | Page metadata and a ready-to-copy catalogue record |
-| `web/` | HTML, responsive CSS, DOM interactions and separate model logic |
-| `scripts/build.py` | Escape metadata and build `web/` into `dist/` |
-| `scripts/init.py` | Set a new project's identity |
-| `tests/` | Application and builder tests |
-| `.github/workflows/pages.yml` | Check PRs and publish successful main builds |
-| `AGENTS.md` | Instructions for future coding work |
-
-Namespace optional storage as `coolcode:<tool-id>:<key>`; CoolCode paths share a
-browser origin. Don't save pasted text/uploads by default. Document external APIs
-and send only the information needed for the selected action. Never embed secrets.
-
-Scheduled refresh is opt-in. Validate source data before deploying, display its date,
-and preserve the last good deployment on failure. Public-repository schedules can
-stop after 60 days without repository activity.
-
-Templates don't propagate future edits automatically. Adopt fixes explicitly and
-consider a versioned reusable workflow once several tools confirm the shared process.
-Choose and add the intended software license before distributing a new project.
+The monthly workflow imports the next consecutive month, validates every station and builds the edition before saving it. Earlier months remain selectable. If an upstream file is missing or changes format, the previous edition stays available. Run `python3 scripts/refresh.py --month YYYY-MM` to retrieve a specified ZIP, or add `--zip /path/to/month.zip --retrieved YYYY-MM-DD` to use a downloaded archive. The workflow supports manual backfills and revised editions.
