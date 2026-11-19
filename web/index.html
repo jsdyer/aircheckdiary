@@ -5,6 +5,7 @@
   <meta name="description" content="Browse Canadian television logs from Halifax and Vancouver. Find a title, compare local airtimes and inspect the original record.">
   <title>Aircheck Diary · CoolCode</title>
   <link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script>
+<script defer src="/assets/tool-metrics.js" referrerpolicy="no-referrer"></script>
 </head>
 <body>
 <header class="mast"><a href="https://coolcode.ca/">CoolCode</a><span>Television archive</span></header>
@@ -24,5 +25,5 @@
   <section class="search" aria-labelledby="findHeading"><p class="kicker">Title index</p><h2 id="findHeading">Find a broadcast</h2><label id="searchLabel" for="query">Search titles across four stations</label><input id="query" type="search" autocomplete="off" placeholder="Try Still Standing or Password"><p id="matchCount" role="status"></p><div id="matches"></div><button id="more" hidden>Show more matches</button></section>
   <section aria-labelledby="scheduleHeading"><p class="kicker">Daily index</p><h2 id="scheduleHeading">Full station schedules</h2><div class="grid" id="schedules"></div></section>
   <section class="source" aria-labelledby="sourceHeading"><p class="kicker">From the archive</p><h2 id="sourceHeading">Read the log</h2><p id="coverage"></p><p>Each station chooses its reporting-day boundary. A time marked “next day” falls after midnight on the following calendar date. Comparisons use the clock in each city.</p><p>A program row (PGR), first segment (PFS) or paid program (PGI) opens a slot. SEG records continue a segmented program. Commercials and promotions inside a slot appear in its source rows.</p><p><a id="zipLink">Monthly CRTC ZIP</a> · <a href="https://crtc.gc.ca/eng/5000/tv14.htm">CRTC logging guide</a> · <a href="https://open.canada.ca/data/en/dataset/800106c1-0b08-401e-8be2-ac45d62e662e">Federal catalogue</a> · <a href="./data/archive.json">Coverage and file inventory</a></p></section>
-</main><footer><a href="https://coolcode.ca/">CoolCode</a><a href="https://github.com/jsdyer/aircheckdiary">Source on GitHub</a></footer>
+</main><footer><a href="https://coolcode.ca/">CoolCode</a><a href="https://github.com/jsdyer/aircheckdiary">Source on GitHub</a> <a href="https://coolcode.ca/report/?tool=aircheckdiary" referrerpolicy="no-referrer">Report an issue</a></footer>
 </body></html>
