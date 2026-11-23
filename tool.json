@@ -3,7 +3,15 @@
   "title": "Aircheck Diary",
   "description": "Compare what Halifax and Vancouver logged at the same local hour, find a favourite title and open its original broadcast records.",
   "category": "media",
-  "tags": ["television", "Canada", "CRTC", "Halifax", "Vancouver", "CBC", "CTV"],
+  "tags": [
+    "television",
+    "Canada",
+    "CRTC",
+    "Halifax",
+    "Vancouver",
+    "CBC",
+    "CTV"
+  ],
   "icon": "tv-minimal",
   "url": "/aircheckdiary/",
   "source": "https://github.com/jsdyer/aircheckdiary",
@@ -12,10 +20,34 @@
   "data_info": {
     "mode": "snapshot",
     "detail": "CRTC television logs cover two Halifax and two Vancouver stations, starting with all 30 reporting dates in September 2026.",
-    "cadence": "Monthly import",
+    "cadence": "Monthly",
     "probes": [
-      {"label": "Latest broadcast date", "url": "https://coolcode.ca/aircheckdiary/data/archive.json", "path": ["last"], "count_at": {"path": ["count"], "unit": "program starts"}},
-      {"label": "Source retrieved", "url": "https://coolcode.ca/aircheckdiary/data/archive.json", "path": ["retrieved"], "count_at": {"path": ["stationDays"], "unit": "station-days"}}
+      {
+        "label": "Latest broadcast date",
+        "url": "https://coolcode.ca/aircheckdiary/data/archive.json",
+        "path": [
+          "last"
+        ],
+        "count_at": {
+          "path": [
+            "count"
+          ],
+          "unit": "program starts"
+        }
+      },
+      {
+        "label": "Source retrieved",
+        "url": "https://coolcode.ca/aircheckdiary/data/archive.json",
+        "path": [
+          "retrieved"
+        ],
+        "count_at": {
+          "path": [
+            "stationDays"
+          ],
+          "unit": "station-days"
+        }
+      }
     ]
   }
 }
