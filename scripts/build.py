@@ -18,6 +18,9 @@ def main():
                    "count": sum(m["count"] for m in editions), "rows": sum(m["rows"] for m in editions),
                    "stationDays": sum(m["stationDays"] for m in editions), "stations": STATIONS, "editions": editions}
         (data / "archive.json").write_bytes(packed(summary))
+        check = ROOT / "snapshots/check.json"
+        if check.exists():
+            shutil.copy(check, data / "check.json")
         shutil.copy(ROOT / "tool.json", site)
         (site / ".nojekyll").touch()
         shutil.rmtree(ROOT / "dist", ignore_errors=True)

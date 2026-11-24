@@ -1,5 +1,10 @@
 name: Import next CRTC television log month
 on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/refresh.py
+      - .github/workflows/refresh.yml
   schedule:
     - cron: '23 8 19 * *'
   workflow_dispatch:

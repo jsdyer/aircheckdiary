@@ -37,7 +37,7 @@ Run `python3 scripts/build.py` to build the site from checked-in snapshots witho
 
 Run `python3 -m unittest discover -s tests -v` and `node --test tests/*.test.mjs` for the importer and comparison checks. CI also exercises the published layout at a project subpath with Playwright.
 
-The monthly workflow imports the next consecutive month, validates every station and builds the edition before saving it. Earlier months remain selectable. If an upstream file is missing or changes format, the previous edition stays available. Run `python3 scripts/refresh.py --month YYYY-MM` to retrieve a specified ZIP, or add `--zip /path/to/month.zip --retrieved YYYY-MM-DD` to use a downloaded archive. The workflow supports manual backfills and revised editions.
+The monthly workflow checks the official federal catalogue before importing the next consecutive month, validates every station and builds the edition before saving it. If the next month has not been published, the check succeeds with `awaiting_publication`; the retained data and their retrieval dates remain unchanged. A listed archive that cannot be downloaded still fails. `data/check.json` exposes the actual catalogue check time separately from `data/archive.json` and its archive retrieval dates. Earlier months remain selectable. If an upstream file is missing or changes format, the previous edition stays available. Run `python3 scripts/refresh.py --month YYYY-MM` to retrieve a specified ZIP, or add `--zip /path/to/month.zip --retrieved YYYY-MM-DD` to use a downloaded archive. The workflow supports manual backfills and revised editions.
 
 <!-- schedule-reliability -->
 ## Schedule reliability
