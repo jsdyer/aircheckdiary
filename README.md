@@ -38,3 +38,11 @@ Run `python3 scripts/build.py` to build the site from checked-in snapshots witho
 Run `python3 -m unittest discover -s tests -v` and `node --test tests/*.test.mjs` for the importer and comparison checks. CI also exercises the published layout at a project subpath with Playwright.
 
 The monthly workflow imports the next consecutive month, validates every station and builds the edition before saving it. Earlier months remain selectable. If an upstream file is missing or changes format, the previous edition stays available. Run `python3 scripts/refresh.py --month YYYY-MM` to retrieve a specified ZIP, or add `--zip /path/to/month.zip --retrieved YYYY-MM-DD` to use a downloaded archive. The workflow supports manual backfills and revised editions.
+
+<!-- schedule-reliability -->
+## Schedule reliability
+
+Public GitHub repositories can have scheduled workflows disabled after 60 days of inactivity. A separate weekly [schedule guard](.github/workflows/schedule-guard.yml) calls GitHub's enable-workflow API for an explicit list of refresh workflows and itself. It can restore workflows disabled for inactivity, preserves manually disabled workflows, and runs independently of collection failures.
+
+This is an interim mitigation, not a scheduling guarantee: GitHub does not document active-workflow renewal as a permanent exemption, and scheduled runs can be delayed or dropped. A scheduler on our own Linux server is the planned independent trigger. The guard does not collect data, create dummy commits, or change source/check timestamps; successful collection and published data freshness still need monitoring.
+<!-- /schedule-reliability -->
