@@ -4,6 +4,7 @@ Compare Canadian television schedules on the local station clock, search a full 
 
 <!-- coolcode:guide -->
 Compare September 1, 2026 at 8 p.m. Halifax’s CJCH logged Password while Vancouver’s CIVT logged Jeopardy! Masters. At 10 p.m. the titles trade places. Open a program’s source rows to see the commercial spots and segments filed inside its slot.
+The official catalogue is checked separately from the retained archive date; an unpublished next month is reported as awaiting publication.
 <!-- /coolcode:guide -->
 
 ## Try a comparison
@@ -44,5 +45,5 @@ The monthly workflow checks the official federal catalogue before importing the 
 
 Public GitHub repositories can have scheduled workflows disabled after 60 days of inactivity. A separate weekly [schedule guard](.github/workflows/schedule-guard.yml) calls GitHub's enable-workflow API for an explicit list of refresh workflows and itself. It can restore workflows disabled for inactivity, preserves manually disabled workflows, and runs independently of collection failures.
 
-This is an interim mitigation, not a scheduling guarantee: GitHub does not document active-workflow renewal as a permanent exemption, and scheduled runs can be delayed or dropped. A scheduler on our own Linux server is the planned independent trigger. The guard does not collect data, create dummy commits, or change source/check timestamps; successful collection and published data freshness still need monitoring.
+This is an interim mitigation, not a scheduling guarantee: GitHub does not document active-workflow renewal as a permanent exemption, and scheduled runs can be delayed or dropped. The independent scheduler on our Linux server triggers overdue refreshes and checks published freshness; its code and current target list live in [the hub repository](https://github.com/jsdyer/jsdyer.github.io/tree/main/services/refresh-watchdog). The guard does not collect data, create dummy commits, or change source/check timestamps; successful collection and published data freshness still need monitoring.
 <!-- /schedule-reliability -->
